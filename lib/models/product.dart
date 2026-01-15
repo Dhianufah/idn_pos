@@ -3,7 +3,6 @@ class Product {
   final int price;
 
   Product({required this.name, required this.price});
-
  
 }
 
