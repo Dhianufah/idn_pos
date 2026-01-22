@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:idn_pos/utils/currency_format.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class QrResultModal extends StatefulWidget {
   final String qrData;
   final int total;
   final bool isPrinting;
-  final VoidCallback onPrint;
+  final VoidCallback onClose;
 
-  const QrResultModal({super.key, required this.qrData, required this.total, required this.isPrinting, required this.onPrint});
+  const QrResultModal({super.key, required this.qrData, required this.total, required this.isPrinting, required this.onClose});
 
   @override
   State<QrResultModal> createState() => _QrResultModalState();
@@ -67,6 +69,123 @@ class _QrResultModalState extends State<QrResultModal> {
       statusText = "Cetak Selesai";
     };
 
-    return const Placeholder();
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.65, //ini buat ngambil widget dari layar
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(30)
+        ),
+      ),
+      padding: EdgeInsets.all(24),
+      child: Column(
+        children: [
+          //Hendel Bar. ini tuh kek box nya buat yang kalo mau bayar dia ketas gitu munculin qr nya
+          Container(
+            width: 50,
+            height: 5,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(10)
+            ),
+          ),
+          SizedBox(height: 20),
+          //status mode
+          AnimatedContainer(
+            duration: Duration(
+              milliseconds: 300,
+            ), // ini buat ngasih efek halus
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            decoration: BoxDecoration(
+              color: statusBgColor,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: statusColor
+              ),
+            ),
+            //ini buat content nya kek naro logo dll
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  statusIcon,
+                  size: 20,
+                  color: statusColor,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  statusText,
+                  style: TextStyle(
+                    color: statusColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: 20),
+          Text(
+            'SCAN UNTUK MEMBAYAR',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Color(0xFF2E3192),
+            ),
+          ),
+
+          SizedBox(height: 5),
+          Text(
+            'Total: ${formatRupiah(widget.total)}',
+            // panggil string intropolestion/buat manggil total belanja kita 
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold
+            ),
+          ),
+
+          SizedBox(height: 20),
+          //qr code container
+          Container(
+            padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey.shade200,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  blurRadius: 15,
+                )
+              ]
+            ),
+            child: QrImageView(
+              data: widget.qrData,
+              version: QrVersions.auto,
+              // auto iru biar nyesuain hp nya jadi ga pake min/max biar ngikutin sdk hp nya
+              size: 220.0,
+            ),
+          ),
+          Spacer(),
+             // close button
+             SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey[200],
+                foregroundColor: Colors.black,
+              ),
+              onPressed: widget.onClose,
+              child: Text('Tutup'),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

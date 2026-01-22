@@ -61,7 +61,7 @@ class PrinterSelector extends StatelessWidget {
             height: 10,
             decoration: BoxDecoration(
               color: Colors.green,
-              shape: BoxShape.circle,
+              shape: BoxShape.circle,  
             ),
           )
         ],
