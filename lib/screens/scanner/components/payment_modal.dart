@@ -159,7 +159,7 @@ class PaymentModal extends StatelessWidget {
               style: TextStyle(
                 color: Colors.grey,
               ),
-            )
+            ),
           ),
         ],
       ),
